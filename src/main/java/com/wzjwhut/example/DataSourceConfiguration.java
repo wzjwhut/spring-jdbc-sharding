@@ -10,6 +10,7 @@ import com.dangdang.ddframe.rdb.sharding.api.strategy.table.TableShardingStrateg
 import com.dangdang.ddframe.rdb.sharding.keygen.DefaultKeyGenerator;
 import com.dangdang.ddframe.rdb.sharding.keygen.KeyGenerator;
 import com.mysql.jdbc.Driver;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -58,9 +59,9 @@ public class DataSourceConfiguration {
 
     private static DataSource createDataSource(final String dataSourceName) {
         log.info("create data source: {}", dataSourceName);
-        DruidDataSource result = new DruidDataSource();
+        HikariDataSource result = new HikariDataSource();
+        result.setJdbcUrl(String.format("jdbc:mysql://localhost:3306/%s", dataSourceName));
         result.setDriverClassName(Driver.class.getName());
-        result.setUrl(String.format("jdbc:mysql://localhost:3306/%s", dataSourceName));
         result.setUsername("root");
         result.setPassword("123456");
         return result;
