@@ -18,8 +18,8 @@ public class Example  implements ApplicationRunner{
     @Autowired
     private PersonRepository personRepository;
 
-    @Autowired
-    private KeyGenerator keyGenerator; /** 默认为snowflake算法 */
+//    @Autowired
+//    private KeyGenerator keyGenerator; /** 默认为snowflake算法 */
 
     @RequestMapping("/")
     String home() {

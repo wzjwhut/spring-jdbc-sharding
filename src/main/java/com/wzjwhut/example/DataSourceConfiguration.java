@@ -1,6 +1,5 @@
 package com.wzjwhut.example;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.dangdang.ddframe.rdb.sharding.api.ShardingDataSourceFactory;
 import com.dangdang.ddframe.rdb.sharding.api.rule.DataSourceRule;
 import com.dangdang.ddframe.rdb.sharding.api.rule.ShardingRule;
@@ -15,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -67,8 +65,8 @@ public class DataSourceConfiguration {
         return result;
     }
 
-    @Bean
-    public KeyGenerator keyGenerator() {
-        return new DefaultKeyGenerator();
-    }
+//    @Bean
+//    public KeyGenerator keyGenerator() {
+//        return new DefaultKeyGenerator();
+//    }
 }
