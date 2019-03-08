@@ -18,6 +18,9 @@ public class Example  implements ApplicationRunner{
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
 //    @Autowired
 //    private KeyGenerator keyGenerator; /** 默认为snowflake算法 */
 
@@ -49,7 +52,11 @@ public class Example  implements ApplicationRunner{
         }
 
         {
-            personRepository.findByIdBetween(1, 10);
+            //personRepository.findByIdBetween(1, 10);
+        }
+
+        {
+            userRepository.findById(1);
         }
 
         {

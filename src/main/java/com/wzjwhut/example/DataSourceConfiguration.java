@@ -5,6 +5,8 @@ import com.dangdang.ddframe.rdb.sharding.api.rule.DataSourceRule;
 import com.dangdang.ddframe.rdb.sharding.api.rule.ShardingRule;
 import com.dangdang.ddframe.rdb.sharding.api.rule.TableRule;
 import com.dangdang.ddframe.rdb.sharding.api.strategy.database.DatabaseShardingStrategy;
+import com.dangdang.ddframe.rdb.sharding.api.strategy.database.NoneDatabaseShardingAlgorithm;
+import com.dangdang.ddframe.rdb.sharding.api.strategy.table.NoneTableShardingAlgorithm;
 import com.dangdang.ddframe.rdb.sharding.api.strategy.table.TableShardingStrategy;
 import com.dangdang.ddframe.rdb.sharding.keygen.DefaultKeyGenerator;
 import com.dangdang.ddframe.rdb.sharding.keygen.KeyGenerator;
@@ -34,23 +36,38 @@ public class DataSourceConfiguration {
     private DataSource buildDataSource() throws SQLException {
         // 设置分库映射
         Map<String, DataSource> dataSourceMap = new HashMap<>(2);
+
+        Map<String, DataSource> dataSourceMap0 = new HashMap<>(1);
+
         //分库列表
         dataSourceMap.put("database0", createDataSource("database0"));
         dataSourceMap.put("database1", createDataSource("database1"));
-        //默认库
+
         DataSourceRule dataSourceRule = new DataSourceRule(dataSourceMap, "database0");
+
+        dataSourceMap0.put("database0", createDataSource("database0"));
+        DataSourceRule dataSourceRule0 = new DataSourceRule(dataSourceMap0 );
 
         TableRule orderTableRule = TableRule.builder("person")
                 .actualTables(Arrays.asList("person_0", "person_1"))
                 .dataSourceRule(dataSourceRule)
+                .databaseShardingStrategy(new DatabaseShardingStrategy("id", new ModuleDatabaseShardingAlgorithm()))
+                .tableShardingStrategy(new TableShardingStrategy("id", new ModuleTableShardingAlgorithm()))
+                .build();
+
+        TableRule userTableRule = TableRule.builder("user")
+                .actualTables(Arrays.asList("user"))
+                .dataSourceRule(dataSourceRule0)
+                .databaseShardingStrategy(new DatabaseShardingStrategy("", new NoneDatabaseShardingAlgorithm()))
+                .tableShardingStrategy(new TableShardingStrategy("", new NoneTableShardingAlgorithm()))
                 .build();
 
         //分库分表策略
         ShardingRule shardingRule = ShardingRule.builder()
                 .dataSourceRule(dataSourceRule)
-                .tableRules(Arrays.asList(orderTableRule))
-                .databaseShardingStrategy(new DatabaseShardingStrategy("id", new ModuleDatabaseShardingAlgorithm()))
-                .tableShardingStrategy(new TableShardingStrategy("id", new ModuleTableShardingAlgorithm())).build();
+                .tableRules(Arrays.asList(orderTableRule, userTableRule))
+                .build();
+
         DataSource dataSource = ShardingDataSourceFactory.createDataSource(shardingRule);
         return dataSource;
     }
