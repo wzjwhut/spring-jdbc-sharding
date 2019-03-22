@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @SpringBootApplication
+@SpringBootConfiguration
 @ControllerAdvice
 public class Example  implements ApplicationRunner{
     private final static Logger log = LogManager.getLogger(Example.class);
@@ -49,6 +50,7 @@ public class Example  implements ApplicationRunner{
 
         {
             //personRepository.findById((long) 1);
+            userRepository.findById(1);
         }
 
         {
@@ -56,7 +58,7 @@ public class Example  implements ApplicationRunner{
         }
 
         {
-            userRepository.findById(1);
+//            userRepository.findById(1);
         }
 
         {
