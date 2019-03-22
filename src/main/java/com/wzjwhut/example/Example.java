@@ -50,7 +50,26 @@ public class Example  implements ApplicationRunner{
 
         {
             //personRepository.findById((long) 1);
-            userRepository.findById(1);
+
+            try{
+                userRepository.findById(1);
+            }catch(Exception ex){
+                log.error("find user failed", ex);
+            }
+
+            try {
+                User user = new User();
+                user.setId(1);
+                userRepository.save(user);
+            }catch(Exception ex){
+                log.error("save user failed", ex);
+            }
+
+            try {
+                userRepository.updateWithQuery(2, 1);
+            }catch(Exception ex){
+                log.error("save user failed", ex);
+            }
         }
 
         {

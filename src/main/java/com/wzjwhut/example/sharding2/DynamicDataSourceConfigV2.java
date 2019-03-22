@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,11 +60,12 @@ public class DynamicDataSourceConfigV2 {
         // 设置默认数据库(未能命中下面定制的规则时会使用该数据源)
         shardingRuleConfig.setDefaultDataSourceName("database0");
 
-        Map<String, DataSource> dataSourceMap = new HashMap<>(2);
+        Map<String, DataSource> dataSourceMap = new LinkedHashMap<>();
 
         //分库列表
         dataSourceMap.put("database0", createDataSource("database0"));
         dataSourceMap.put("database1", createDataSource("database1"));
+        dataSourceMap.put("database2", createDataSource("database0"));
 
 
         TableRuleConfiguration rule1 = new TableRuleConfiguration();
@@ -87,11 +89,11 @@ public class DynamicDataSourceConfigV2 {
 
 
         {
-            TableRuleConfiguration rule2 = new TableRuleConfiguration();
-            // 设置分表的基础表(前缀部分)
-            rule2.setLogicTable("user");
-            // 数据节点
-            rule2.setActualDataNodes("database1.user");
+//            TableRuleConfiguration rule2 = new TableRuleConfiguration();
+//            // 设置分表的基础表(前缀部分)
+//            rule2.setLogicTable("user");
+//            // 数据节点
+//            rule2.setActualDataNodes("database1.user");
             // 分表分库的依据字段列名
             //rule2.setKeyGeneratorColumnName("id");
             // 分库策略
@@ -108,7 +110,7 @@ public class DynamicDataSourceConfigV2 {
 //                    return availableTargetNames;
 //                }
 //            }));
-            tableRuleConfigurations.add(rule2);
+            //tableRuleConfigurations.add(rule2);
 
         }
 
@@ -144,11 +146,11 @@ public class DynamicDataSourceConfigV2 {
                     }
                 }));
 
-
-
+        Properties p = new Properties();
+        p.setProperty("sql.show",Boolean.TRUE.toString());
         DataSource dataSource = ShardingDataSourceFactory.createDataSource(dataSourceMap,
                 shardingRuleConfig,
-                new ConcurrentHashMap(),new Properties());
+                new ConcurrentHashMap(),p);
         ShardingDataSource sds = (ShardingDataSource)dataSource;
         ShardingRule rule = sds.getShardingContext().getShardingRule();
 //        {

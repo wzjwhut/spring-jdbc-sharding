@@ -18,5 +18,8 @@ import java.util.List;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-
+    @Modifying
+    @Transactional
+    @Query("update User a set a.id=:newId WHERE a.id=:id")
+    int updateWithQuery(@Param("newId") int newId, @Param("id") int id);
 }
